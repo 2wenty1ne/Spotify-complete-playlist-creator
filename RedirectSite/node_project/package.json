@@ -1,0 +1,19 @@
+{
+  "name": "spotify-complete-playlist-creator-redirect-site",
+  "version": "1.0.0",
+  "description": "The main project is a tool to create a playlist containing every song from an artist. This is just the redirect site for the spotify auth.",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "tsc && node ./dist/app.js",
+    "dev": "nodemon -e ts --exec \"npm run compile || exit 1\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,5 +1,5 @@
-from sendRequest import send_request
-from userData import get_user_id
+from utils.sendRequest import send_request
+from data.userData import get_user_id
 
 
 def create_playlist(token):

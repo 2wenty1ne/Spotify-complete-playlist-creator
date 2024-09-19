@@ -1,5 +1,5 @@
-from Song import Song
-from sendRequest import send_request, clear_whitespaces
+from data.Song import Song
+from utils.sendRequest import send_request, clear_whitespaces
 
 
 def retrieve_songs_from_artist_id(token, artist_id):

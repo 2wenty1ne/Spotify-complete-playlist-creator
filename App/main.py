@@ -1,5 +1,6 @@
-from App.createPlaylist import create_playlist
-from App.getToken import get_token
+from utils.getToken import get_token
+from spotify.createPlaylist import create_playlist
+from spotify.retrieveSongs import retrieve_songs_from_artist_id
 
 token = get_token()
 
@@ -9,5 +10,5 @@ token = get_token()
 # artist_id = "3QaxveoTiMetZCMp1sftiu"  # waterparks
 artist_id = "3Fl31gc0mEUC2H0JWL1vic"  # paula <3
 # artist_id = "2p2uE4i92Dn4DkThfoKIB9" # double test
-# retrieve_songs_from_artist_id(token, artist_id)
+retrieve_songs_from_artist_id(token, artist_id)
 create_playlist(token)

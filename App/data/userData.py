@@ -2,7 +2,8 @@ from dotenv import dotenv_values
 
 
 def read_env(keyword):
-    env_vars = dotenv_values("../../.env")
+    env_vars = dotenv_values()
+    
     return env_vars[f"{keyword}"]
 
 

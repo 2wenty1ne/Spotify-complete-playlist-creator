@@ -1,6 +1,6 @@
 import requests
 
-from App.data.CustomExceptions import RequestTypeNotFoundException
+from data.CustomExceptions import RequestTypeNotFoundException
 
 
 def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
