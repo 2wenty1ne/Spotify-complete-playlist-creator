@@ -29,13 +29,13 @@ def retrieve_songs_from_artist_id(token, artist_id):
 
     #? Get every album
     song_list = []
-    # print("\nAlbums:") # TEST
+
     for album in albums_response['items']:
         album_url = album['href']
 
-        # songs_url = f"{album_url}/tracks"
-        haftbefehl_test_album_id = "2irGlvjYWIG5mtVwlahBu3"
-        songs_url = f"https://api.spotify.com/v1/albums/{haftbefehl_test_album_id}/tracks"
+        songs_url = f"{album_url}/tracks"
+        # haftbefehl_test_album_id = "2irGlvjYWIG5mtVwlahBu3" # TEST
+        # songs_url = f"https://api.spotify.com/v1/albums/{haftbefehl_test_album_id}/tracks"
         songs_headers = authed_headers
         songs_params = {'market': 'DE', 'offset': '0'}
 
@@ -46,7 +46,7 @@ def retrieve_songs_from_artist_id(token, artist_id):
             song = Song(curr_song['name'], curr_song['uri'], album['name'], album['album_type'], curr_song['track_number'], artist_id, [])
 
             for artist in curr_song['artists']:
-                song.artist_ids.append(artist['name'])
+                song.artist_ids.append(artist['id'])
 
             add_songs_to_list(song_list, song)
 
@@ -57,9 +57,12 @@ def retrieve_songs_from_artist_id(token, artist_id):
 
 def add_songs_to_list(song_list, new_song):
     # print(f"Checking: {new_song.name = }, number: {new_song.tracknumber} from {new_song.album_type} - {new_song.album}") # TEST
-    print(new_song)
+    # print(new_song) # TEST
     if not song_list:
-        song_list.append(new_song)
+        print("first")
+        if is_main_artist_present(new_song):
+            print("first sec+")
+            song_list.append(new_song)
         return
 
     is_double = False
@@ -70,8 +73,14 @@ def add_songs_to_list(song_list, new_song):
     # print(f"{is_double = }\n") # TEST
 
     if not is_double:
-        song_list.append(new_song)
+        print(new_song)
+        if is_main_artist_present(new_song):
+            song_list.append(new_song)
 
 
-def check_if_artist_is_present(song):
-    pass
+def is_main_artist_present(song):
+    print(f"IDs: {song.artist_ids} - Main: {song.main_artist_id}")
+    if song.main_artist_id in song.artist_ids:
+        return True
+    else:
+        return False
