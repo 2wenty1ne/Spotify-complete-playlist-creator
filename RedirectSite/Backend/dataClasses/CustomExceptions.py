@@ -1,0 +1,2 @@
+class RequestTypeNotFoundException(Exception):
+    pass

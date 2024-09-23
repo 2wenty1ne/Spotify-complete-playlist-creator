@@ -1,0 +1,26 @@
+:root {
+    /* Color pallete https://colorhunt.co/palette/211951836fff15f5baf0f3ff */
+    --main-bg-color: #211951;
+    --sec-bg-color: #836FFF;
+    --font-color: #F0F3FF;
+    --signal-color: #15F5BA;
+}
+
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+body {
+    background-color: var(--main-bg-color);
+    font-family: Arial, sans-serif;
+    color: var(--font-color);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.button {
+    background-color: var(--sec-bg-color);
+    color: var(--font-color);
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 15px 32px;
+    font-weight: bold;
+}

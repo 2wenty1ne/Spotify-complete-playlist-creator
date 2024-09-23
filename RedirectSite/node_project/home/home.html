@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Creation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='overall-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home/home-styles.css') }}">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-left"></div>
+        <h1 class="site-title">Spotify Playlist Creation Tool</h1>
+        <div class="header-right">
+            <button class="login-button">
+                <div class="">Login</div>
+                <div class="pb-circle">
+                    <img src="{{ url_for('static', filename='media/profilPicute_placeholder-40x40.png') }}" alt="placeholder for profil picture.">
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <h2 class="playlist-creation-text">Input an artists ID to create a new playlist in your library containing every song the has in its discography.</h2>
+        <div class="playlist-creation-container">
+            <div class="input-column">
+                <div class="input-fields-wrapper">
+                    <input type="text" id="userInputArtistID" name="userInputArtistID" placeholder="Input artist ID here" required minlength="2" maxlength="50">
+                    <br>
+                    <input type="submit" class="button" id="submitArtistID" value="SUBMIT" >
+                </div>
+                <h2>How to get artists ID</h2>
+                <ol class="instructions-list">
+                    <li class="instructions-element">Go to artists spotify page</li>
+                    <li>Click the 3 dots</li>
+                    <li>Click the "share" button</li>
+                    <li>Select "copy link to artist"</li>
+                    <li>Paste the link into the input field above</li>
+                </ol>
+                <button class="button transform-button">TRANSFORM</button>
+            </div>
+            
+            <div class="display-column">
+                <div class="playlist-iFrame-wrapper">
+                    <div class="playlist-placehorder">Playlist placeholder</div>
+                    <iframe class="playlist-iFrame" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2SO7UhZVM80OakF1xCo1mD?utm_source=generator&theme=0" width="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- <footer>
+        <p>&copy; 2024 My Plain Website. All rights reserved.</p>
+    </footer> -->
+
+    <script src="{{ url_for('static', filename='/dist/app.js') }}"></script>
+</body>
+</html>
