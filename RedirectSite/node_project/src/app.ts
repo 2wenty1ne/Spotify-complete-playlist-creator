@@ -30,6 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const playlistNameInputField: HTMLInputElement = document.getElementById('userInputPlaylistName') as HTMLInputElement;
+    if (!playlistNameInputField) {
+        console.error('Playlist name field not found')
+        return;
+    }
+
     const artistIDSubmitButton = document.getElementById('submitArtistID');
     if (!artistIDSubmitButton) {
         console.error('Artist id submit button not found')
@@ -37,8 +43,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     artistIDSubmitButton.addEventListener('click', () => {
-        console.log('Submitted: ', artistIDInputField.value);
+        let playlistNameInputValue = playlistNameInputField.value;
+        let artistIDInputValue = artistIDInputField.value;
+        let isPlaylistPrivate: boolean = false;
+
+        const privacySwitchButton: HTMLInputElement = document.getElementById('privacy-toggle-switch') as HTMLInputElement;
+        if (!privacySwitchButton) {
+            console.error('Privacy switch button not found');
+            return;
+        }
+
+        isPlaylistPrivate = privacySwitchButton.checked ? true : false;
+
+        console.log('Submitted playlist name: ', playlistNameInputValue);
+        console.log('Submitted id: ', artistIDInputValue);
+        console.log('Private playlist?', isPlaylistPrivate);
     })
+
+
 
 
     const logInButton: HTMLButtonElement = document.querySelector('.login-button') as HTMLButtonElement;

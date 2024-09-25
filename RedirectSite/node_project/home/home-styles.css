@@ -54,12 +54,7 @@ main {
     padding: 1rem;
     height: 100%;
 }
-footer {
-    text-align: center;
-    padding: 1rem;
-    background-color: var(--sec-bg-color);
-    margin-top: 1rem;
-}
+
 .playlist-creation-text{
     text-align: center;
 }
@@ -76,9 +71,10 @@ footer {
     padding: 16px;
 }
 input[type=text] {
-    width: 80%;
+    width: 70%;
     height: 100%;
     padding: 12px 20px;
+    margin-bottom: 5px;
     border: none;
     border-radius: 4px;
     text-align: right;
@@ -88,8 +84,15 @@ input[type=submit] {
     margin: 10px 0px 10px 0px;
     border: none;
 }
-.userInputArtistID-wrapper {
+.input-buttons-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+.privacy-toggle-switch-wrapper{
     margin: 8px;
+    /* background-color: red; */
 }
 .instructions-list {
     list-style-position: inside;
@@ -108,6 +111,7 @@ input[type=submit] {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 85%;
     padding: 8px;
     height: 80%;
     border-color: var(--signal-color);
@@ -121,4 +125,11 @@ input[type=submit] {
 .playlist-iFrame{
     height: 100%;
     display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--sec-bg-color);
+    margin-top: 1rem;
 }

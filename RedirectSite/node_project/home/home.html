@@ -27,9 +27,20 @@
         <div class="playlist-creation-container">
             <div class="input-column">
                 <div class="input-fields-wrapper">
+                    <input type="text" id="userInputPlaylistName" name="userInputPlaylistName" placeholder="Input playlist name here" required minlength="1">
                     <input type="text" id="userInputArtistID" name="userInputArtistID" placeholder="Input artist ID here" required minlength="2" maxlength="50">
                     <br>
-                    <input type="submit" class="button" id="submitArtistID" value="SUBMIT" >
+                    <div class="input-buttons-wrapper">
+                        <span>Playlist private:</span>
+                        <div class="privacy-toggle-switch-wrapper">
+                            <label class="switch">
+                                <input id="privacy-toggle-switch" type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <input type="submit" class="button" id="submitArtistID" value="SUBMIT" >
+                    </div>
+
                 </div>
                 <h2>How to get artists ID</h2>
                 <ol class="instructions-list">
