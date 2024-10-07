@@ -61,8 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
 
-
-
     const logInButton: HTMLButtonElement = document.querySelector('.login-button') as HTMLButtonElement;
     if(!logInButton) {
         console.error('Login button not found')
@@ -71,7 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     logInButton.addEventListener('click', () => {
         console.log('Log in button clicked');
-        window.location.href = 'http://127.0.0.1:8888/login';
+
+        const currentHost = window.location.origin;
+        const loginPath = '/login';
+        const loginUrl = `${currentHost}${loginPath}`;
+
+        window.location.href = loginUrl;
     })
 
 
