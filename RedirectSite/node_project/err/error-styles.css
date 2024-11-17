@@ -1,0 +1,14 @@
+body, html {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+main {
+    text-align: center;
+    padding: 20px;
+}
+
+.return-home-button {
+    border: none;
+}

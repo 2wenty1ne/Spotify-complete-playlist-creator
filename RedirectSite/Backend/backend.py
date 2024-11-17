@@ -1,6 +1,7 @@
 import os
 import string
 import random
+import urllib
 from urllib.parse import urlencode
 from flask import Flask, redirect, request, render_template, make_response
 
@@ -28,56 +29,55 @@ def home():
 @app.route('/login')
 def login():
     state = generate_random_string(16)
-    print(f'\nState in login: {state}\n\n')
     scope = 'user-read-private user-read-email'
 
     host = request.host_url.rstrip('/')
-    
+
     REDIRECT_URI = f"{host}/callback"
 
-    # params = {
-    #     'response_type': 'code',
-    #     'client_id': CLIENT_ID,
-    #     'scope': scope,
-    #     'redirect_uri': REDIRECT_URI,
-    #     'state': state
-    # }
-
-    # url = 'https://accounts.spotify.com/authorize?' + urllib.parse.urlencode(params)
-
-    # return redirect(url)
-
-    response = make_response(redirect('https://accounts.spotify.com/authrize?' +
-    urlencode({
+    params = {
         'response_type': 'code',
         'client_id': CLIENT_ID,
         'scope': scope,
         'redirect_uri': REDIRECT_URI,
         'state': state
-    })))
-    print(f"Redirect URI: {REDIRECT_URI}")
+    }
 
+    url = 'https://accounts.spotify.com/authorize?' + urllib.parse.urlencode(params)
+
+    response = redirect(url)
     response.set_cookie(STATE_KEY, state)
+
     return response
 
 
 @app.route('/callback')
 def callback():
-    code = request.args.get('code')
-    state = request.args.get('state')
-    stored_state = request.cookies.get(STATE_KEY)
+    code = request.args.get('code', None)
+    state = request.args.get('state', None)
+    stored_state = request.cookies.get(state_key) if request.cookies else None
 
-    print(f"callback:")
-    print(f"Code: {code}")
-    print(f"Req state: {state} - Stored state: {stored_state}")
 
-    if stored_state == state:
-        print("No state mismatch")
-    else:
+    print(f"callback:") #!TEST
+    print(f"Code: {code}") #!TEST
+    print(f"Req state: {state} - Stored state: {stored_state}") #!TEST
+
+    if (state is None) or (state != stored_state):
         print("State mismatch :(")
+        query_params = urllib.parse.urlencode({'error': 'state_mismatch'})
+        return redirect(f"/err?{query_params}")
+    else:
+        print("No state mismatch")
 
     return render_template('login-callback/login-callback.html')
 
+
+#? ERROR
+@app.route('/err')
+def error():
+    error_message = request.args.get('error', 'Unknown error occurred')
+    errorTemplatePath = "err/error.html"
+    return render_template(errorTemplatePath, error_message=error_message)
 
 
 if __name__ == '__main__':

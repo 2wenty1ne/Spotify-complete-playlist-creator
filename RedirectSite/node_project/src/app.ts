@@ -23,7 +23,12 @@ function playlistPlaceholderSwap() {
     }
 }
 
+const errorButton: HTMLButtonElement = document.querySelector('.error-button') as HTMLButtonElement;
+
 document.addEventListener('DOMContentLoaded', () => {
+    const bodyId = document.body.id;
+    if (bodyId === "homepage") {
+
     const artistIDInputField: HTMLInputElement = document.getElementById('userInputArtistID') as HTMLInputElement;
     if (!artistIDInputField) {
         console.error('Artist id input field not found');
@@ -54,10 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         isPlaylistPrivate = privacySwitchButton.checked ? true : false;
-
-        console.log('Submitted playlist name: ', playlistNameInputValue);
-        console.log('Submitted id: ', artistIDInputValue);
-        console.log('Private playlist?', isPlaylistPrivate);
     })
 
 
@@ -68,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     logInButton.addEventListener('click', () => {
-        console.log('Log in button clicked');
 
         const currentHost = window.location.origin;
         const loginPath = '/login';
@@ -83,8 +83,45 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Transorm button not found');
         return;
     }
+    
     transformButton.addEventListener('click', () => {
-        console.log('Transformed!');
+        console.log('Transformed!'); //! TEST
         playlistPlaceholderSwap();
     })
+
+
+    // //! TEST
+    const errorButton: HTMLButtonElement = document.querySelector('.error-button') as HTMLButtonElement;
+    if (!errorButton) {
+        console.log('error button not found');
+        return;
+    }
+
+    errorButton.addEventListener('click', () => {
+        console.log("error button clicked!");
+        const currentHost = window.location.origin;
+        const errorPath = '/err';
+        const errorParams = new URLSearchParams({ error: 'amogus' }).toString();
+        const errorUrl = `${currentHost}${errorPath}?${errorParams}`;
+
+        window.location.href = errorUrl;
+    })
+    }
+
+    //? ERROR PAGE
+    if (bodyId === "errorpage") {
+    
+    const homeButton: HTMLButtonElement = document.querySelector('.return-home-button') as HTMLButtonElement;
+    if (!homeButton) {
+        console.log('home button not found');
+        return;
+    }
+
+    homeButton.addEventListener('click', () => {
+        const currentHost = window.location.origin;
+        const homeURL = `${currentHost}/`;
+
+        window.location.href = homeURL;
+    })
+    }
 })

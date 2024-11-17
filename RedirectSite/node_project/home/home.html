@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='home/home-styles.css') }}">
 </head>
 
-<body>
+<body id="homepage">
     <header class="site-header">
         <div class="header-left"></div>
         <h1 class="site-title">Spotify Playlist Creation Tool</h1>
@@ -25,6 +25,7 @@
     <main>
         <h2 class="playlist-creation-text">Input an artists ID to create a new playlist in your library containing every song the has in its discography.</h2>
         <div class="playlist-creation-container">
+
             <div class="input-column">
                 <div class="input-fields-wrapper">
                     <input type="text" id="userInputPlaylistName" name="userInputPlaylistName" placeholder="Input playlist name here" required minlength="1">
@@ -51,6 +52,7 @@
                     <li>Paste the link into the input field above</li>
                 </ol>
                 <button class="button transform-button">TRANSFORM</button>
+                <button class="button error-button">ERROR</button>
             </div>
             
             <div class="display-column">

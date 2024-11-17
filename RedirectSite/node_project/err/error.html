@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Creation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='overall-styles.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='err/error-styles.css') }}">
+</head>
+<body id="errorpage">
+    
+    <main>
+        <h1>Error</h1>
+        <p>{{ error_message }}</p>
+        <button class="button return-home-button">Return to home</button>
+    </main>
+    
+    <script src="{{ url_for('static', filename='dist/app.js') }}"></script>
+</body>
+</html>

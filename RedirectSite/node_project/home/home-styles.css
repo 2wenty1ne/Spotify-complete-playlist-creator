@@ -101,6 +101,10 @@ input[type=submit] {
     border: none;
 }
 
+.error-button {
+    border: none;
+}
+
 .display-column {
     background-color: rgba(0, 0, 255, 0); /* TEST */
     flex: 50%;
