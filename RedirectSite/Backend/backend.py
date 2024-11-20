@@ -2,6 +2,8 @@ import os
 import string
 import random
 import urllib
+import base64
+import requests
 from urllib.parse import urlencode
 from flask import Flask, redirect, request, render_template, make_response
 
@@ -54,22 +56,58 @@ def login():
 @app.route('/callback')
 def callback():
     code = request.args.get('code', None)
+    error = request.args.get('error', None)
     state = request.args.get('state', None)
-    stored_state = request.cookies.get(state_key) if request.cookies else None
+    stored_state = request.cookies.get(STATE_KEY) if request.cookies else None
+
+    if (error):
+        query_error_params = urllib.parse.urlencode({'error': error})
+        return redirect(f"/err?{query_error_params}")
 
 
-    print(f"callback:") #!TEST
-    print(f"Code: {code}") #!TEST
-    print(f"Req state: {state} - Stored state: {stored_state}") #!TEST
 
     if (state is None) or (state != stored_state):
-        print("State mismatch :(")
-        query_params = urllib.parse.urlencode({'error': 'state_mismatch'})
-        return redirect(f"/err?{query_params}")
-    else:
-        print("No state mismatch")
+        query_state_mismatch_params = urllib.parse.urlencode({'error': 'state_mismatch'})
+        return redirect(f"/err?{query_state_mismatch_params}")
 
-    return render_template('login-callback/login-callback.html')
+    if (code is None):
+        query_unknown_error_params = urllib.parse.urlencode({'error': 'unknown_error'})
+        return redirect(f"/err?{query_error_params}")
+    
+    response = make_response()
+    response.delete_cookie(STATE_KEY)
+    
+    auth_url = "https://accounts.spotify.com/api/token"
+    auth_header = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
+
+    host = request.host_url.rstrip('/')
+    REDIRECT_URI = f"{host}/callback"
+
+    auth_payload = {
+        "code": code,
+        "redirect_uri": REDIRECT_URI,
+        "grant_type": "authorization_code"
+    }
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": f"Basic {auth_header}"
+    }
+
+    token_response = requests.post(auth_url, data=auth_payload, headers=headers)
+    if token_response.status_code == 200:
+        tokens = token_response.json()
+
+        access_token = tokens['access_token']
+        refresh_token = tokens['refresh_token']
+
+        user_info_url = "https://api.spotify.com/v1/me"
+        user_headers = {"Authorization": f"Bearer {access_token}"}
+        user_response = requests.get(user_info_url, headers=user_headers)
+
+        if response.status_code == 200:
+            print("User Info:", user_response.json())
+
+    return redirect(f"/")
 
 
 #? ERROR
