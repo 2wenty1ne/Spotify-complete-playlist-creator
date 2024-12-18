@@ -6,11 +6,11 @@ from data.CustomExceptions import RequestTypeNotFoundException
 def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
 
     if r_type == "post":
-        # print(f"Sending post request to {url}") #TEST
+        # print(f"Sending post request to {url}") #!TEST
         response = requests.post(url, headers=headers, data=data, json=json_data)
 
     elif r_type == "get":
-        # print(f"Sending get request to {url}") #TEST
+        # print(f"Sending get request to {url}") #!TEST
         response = requests.get(url, headers=headers, params=params)
 
     else:
