@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    artistIDSubmitButton.addEventListener('click', () => {
+    artistIDSubmitButton.addEventListener('click', async () => {
         let playlistNameInputValue = playlistNameInputField.value;
         let artistIDInputValue = artistIDInputField.value;
         let isPlaylistPrivate: boolean = false;
@@ -59,6 +59,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         isPlaylistPrivate = privacySwitchButton.checked ? true : false;
+
+        //TODO Check if logged in
+
+        const requestBody = {
+            playlistName: playlistNameInputValue,
+            artistID: artistIDInputValue,
+            isPrivate: isPlaylistPrivate
+        }
+
+        const response = await fetch('/createPlaylist', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        })
+
+        if (!response.ok) {
+            console.log("Error creating playlist")
+        }
+
+        const result = await response.json()
+        console.log("Success: ", result)
     })
 
 
@@ -77,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = loginUrl;
     })
 
-
+    //! TEST
     const transformButton: HTMLButtonElement = document.querySelector('.transform-button') as HTMLButtonElement;
     if(!transformButton) {
         console.error('Transorm button not found');
@@ -90,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
 
-    // //! TEST
+    //! TEST
     const errorButton: HTMLButtonElement = document.querySelector('.error-button') as HTMLButtonElement;
     if (!errorButton) {
         console.log('error button not found');
