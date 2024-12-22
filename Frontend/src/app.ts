@@ -47,10 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    artistIDSubmitButton.addEventListener('click', async () => {
+    artistIDSubmitButton.addEventListener('click', () => {
         let playlistNameInputValue = playlistNameInputField.value;
         let artistIDInputValue = artistIDInputField.value;
         let isPlaylistPrivate: boolean = false;
+
+        console.log("submitting...")
 
         const privacySwitchButton: HTMLInputElement = document.getElementById('privacy-toggle-switch') as HTMLInputElement;
         if (!privacySwitchButton) {
@@ -68,18 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
             isPrivate: isPlaylistPrivate
         }
 
-        const response = await fetch('/createPlaylist', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        })
+        // const response = await fetch('/createPlaylist', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(requestBody)
+        // })
 
-        if (!response.ok) {
-            console.log("Error creating playlist")
-        }
+        // if (!response.ok) {
+        //     console.log("Error creating playlist")
+        // }
 
-        const result = await response.json()
-        console.log("Success: ", result)
+        // const result = await response.json()
+        // console.log("Success: ", result)
     })
 
 

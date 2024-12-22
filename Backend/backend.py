@@ -16,7 +16,7 @@ STATE_KEY_COOKIE = 'spotify_auth_state'
 ACCESS_TOKEN_COOKIE = "spotify_access_token"
 REFRESH_TOKEN_COOKIE = "spotify_refresh_token"
 
-WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'node_project'))
+WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Frontend'))
 
 app = Flask(__name__, template_folder=WEB_FOLDER_PATH, static_folder=WEB_FOLDER_PATH)
 
@@ -147,10 +147,10 @@ def error():
     return render_template(errorTemplatePath, error_message=error_message)
 
 
+#? PLAYLIST CREATION
 @app.route('/createPlaylist')
 def createPlaylist():
-
-    #TODO redirect back to home
+    print(request.args)
     pass
 
 

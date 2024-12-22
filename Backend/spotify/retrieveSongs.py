@@ -1,4 +1,4 @@
-from data.Song import Song
+from dataClasses.Song import Song
 from utils.sendRequest import send_request, clear_whitespaces
 
 

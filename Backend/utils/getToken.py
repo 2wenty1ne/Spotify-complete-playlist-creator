@@ -1,6 +1,6 @@
 import base64
 
-from data.userData import get_client_id, get_client_secret
+from secretAccess.userData import get_client_id, get_client_secret
 from utils.sendRequest import send_request
 
 

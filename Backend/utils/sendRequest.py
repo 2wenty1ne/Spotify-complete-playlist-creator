@@ -1,6 +1,6 @@
 import requests
 
-from data.CustomExceptions import RequestTypeNotFoundException
+from dataClasses.CustomExceptions import RequestTypeNotFoundException
 
 
 def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
@@ -22,7 +22,7 @@ def send_request(r_type, url, headers=None, params=None, data=None, json_data=No
     else:
         print('Error:', response.status_code)
         print(response.json())
-        return 0
+        return None
 
 
 def clear_whitespaces(obj_to_clean):
