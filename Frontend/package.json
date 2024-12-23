@@ -4,10 +4,11 @@
   "description": "The main project is a tool to create a playlist containing every song from an artist. This is just the redirect site for the spotify auth.",
   "main": "dist/index.js",
   "scripts": {
-    "tmp": "nodemon -e ts --exec \"npm run tmp2 || exit 1\"",
-    "tmp2": "tsc",
+    "dev": "nodemon -e ts --exec \"npm run webpack || exit 1\"",
+    "webpack": "webpack",
+    "tsc": "tsc",
     "compile": "tsc && node ./dist/app.js",
-    "dev": "nodemon -e ts --exec \"npm run compile || exit 1\"",
+    "dev2": "nodemon -e ts --exec \"npm run compile || exit 1\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,7 +16,10 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
   }
 }
