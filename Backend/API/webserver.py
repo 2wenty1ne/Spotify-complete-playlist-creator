@@ -5,7 +5,7 @@ import urllib
 import base64
 import requests
 from urllib.parse import urlencode
-from flask import Flask, redirect, request, render_template, make_response
+from flask import Flask, redirect, request, render_template, make_response, jsonify
 
 from secretAccess.userData import get_client_id, get_client_secret
 
@@ -16,7 +16,7 @@ STATE_KEY_COOKIE = 'spotify_auth_state'
 ACCESS_TOKEN_COOKIE = "spotify_access_token"
 REFRESH_TOKEN_COOKIE = "spotify_refresh_token"
 
-WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Frontend'))
+WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Frontend'))
 
 app = Flask(__name__, template_folder=WEB_FOLDER_PATH, static_folder=WEB_FOLDER_PATH)
 
@@ -57,6 +57,7 @@ def login():
 
 @app.route('/callback')
 def callback():
+    #TODO Dont always redirect to /err, return to home and show error message 
     code = request.args.get('code', None) #? Code if auth successfull
     auth_error = request.args.get('error', None)
     login_gen_state = request.args.get('state', None)
@@ -148,11 +149,17 @@ def error():
 
 
 #? PLAYLIST CREATION
-@app.route('/createPlaylist')
+@app.route('/createPlaylist', methods=['POST'])
 def createPlaylist():
-    print(request.args)
-    pass
+    data = request.get_json()
+
+    print(data)
+
+    return jsonify({"message":"worked"})
 
 
-if __name__ == '__main__':
+#? START WEBSERVER
+def startWebserver():
     app.run(host='0.0.0.0', port="8888", debug=True)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port="8888", debug=True)
