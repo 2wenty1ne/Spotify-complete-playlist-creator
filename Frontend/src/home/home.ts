@@ -1,3 +1,4 @@
+import { swapNotificationModalVisability } from "../notificationModal";
 import { playlistPlaceholderSwap, getPlaylistInputValues, SubmitElementNotFound } from "./functions";
 
 export function handleHome() {
@@ -42,7 +43,7 @@ export function handleHome() {
     })
 
     //? Login Button
-    const logInButton: HTMLButtonElement = document.querySelector('.login-buttonn') as HTMLButtonElement;
+    const logInButton: HTMLButtonElement = document.querySelector('.login-button') as HTMLButtonElement;
     if(!logInButton) {
         console.error('Login button not found')
         return;
@@ -56,6 +57,7 @@ export function handleHome() {
 
         window.location.href = loginUrl;
     })
+
 
     //! TEST
     const transformButton: HTMLButtonElement = document.querySelector('.transform-button') as HTMLButtonElement;
@@ -74,18 +76,20 @@ export function handleHome() {
     //! TEST
     const errorButton: HTMLButtonElement = document.querySelector('.error-button') as HTMLButtonElement;
     if (!errorButton) {
-        console.log('error button not found');
+        //! Internal Server Error
+        console.log('HOME - error button not found');
         return;
     }
 
     errorButton.addEventListener('click', () => {
+        swapNotificationModalVisability()
         console.log("error button clicked!");
-        const currentHost = window.location.origin;
-        const errorPath = '/err';
-        const errorParams = new URLSearchParams({ error: 'amogus' }).toString();
-        const errorUrl = `${currentHost}${errorPath}?${errorParams}`;
+        // const currentHost = window.location.origin;
+        // const errorPath = '/err';
+        // const errorParams = new URLSearchParams({ error: 'amogus' }).toString();
+        // const errorUrl = `${currentHost}${errorPath}?${errorParams}`;
 
-        window.location.href = errorUrl;
+        // window.location.href = errorUrl;
     })
     //! TEST
 }

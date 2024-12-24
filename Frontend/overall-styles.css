@@ -1,6 +1,7 @@
 :root {
     /* Color pallete https://colorhunt.co/palette/211951836fff15f5baf0f3ff */
     --main-bg-color: #211951;
+    --darker-bg-color: #151033;
     --sec-bg-color: #836FFF;
     --font-color: #F0F3FF;
     --signal-color: #15F5BA;
@@ -14,6 +15,38 @@ body {
     color: var(--font-color);
     line-height: 1.6;
     margin: 0;
+}
+
+/*? Notification modal*/
+#notification-modal {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--darker-bg-color);
+    padding: 20px;
+    color: --font-color;
+    border-radius: 20px;
+}
+
+#notification-modal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#close-modal-button {
+    margin-top: 1.5em;
+    border: none;
+}
+
+#notification-model-message {
+    font-size: 1.3em;
+    margin-left: 0.8em;
 }
 
 .button {
