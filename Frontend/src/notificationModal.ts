@@ -9,17 +9,17 @@ export function handleModal() {
     
     modalCloseButton.addEventListener('click', () => {
         try {
-            var notificationModal = getNotificationModalElement()
+            var notificationModalBlur = getNotificationModalBlurElement()
         } catch (err) {
             return;
         }
-        hideNotificationModal(notificationModal)
+        hideNotificationModal(notificationModalBlur)
     });
 }
 
 export function sendNotifactionModal() {
     try {
-        var modalElement = getNotificationModalElement()
+        var modalElement = getNotificationModalBlurElement()
     } catch (err) {
         console.error(err.message)
         return;
@@ -28,36 +28,36 @@ export function sendNotifactionModal() {
 } 
 
 
-export function getNotificationModalElement() {
-    const notificationModal: HTMLDivElement = document.querySelector('#notification-modal') as HTMLDivElement;
-    if (!notificationModal) {
+export function getNotificationModalBlurElement() {
+    const notificationModalBlur: HTMLDivElement = document.querySelector('#notification-modal-blur-background') as HTMLDivElement;
+    if (!notificationModalBlur) {
         //! Internal Server Error
-        console.log('GLOBAL - notification modal not found');
-        throw Error("GLOBAL - notification modal not found");
+        console.log('GLOBAL - notification modal background not found');
+        return
     }
 
-    return notificationModal;
+    return notificationModalBlur;
 }
 
 export function swapNotificationModalVisability() {
     try {
-        var notificationModal = getNotificationModalElement()
+        var notificationModalBlur = getNotificationModalBlurElement()
     } catch(err) {
         console.error(err.message)
         return
     }
 
-    if (notificationModal.style.display == "none") {
-        showNotificationModal(notificationModal)
+    if (notificationModalBlur.style.display == "none") {
+        showNotificationModal(notificationModalBlur)
     } else {
-        hideNotificationModal(notificationModal)
+        hideNotificationModal(notificationModalBlur)
     }
 }
 
-export function hideNotificationModal(modal: HTMLDivElement) {
-    modal.style.display = 'none';
+export function hideNotificationModal(back: HTMLDivElement) {
+    back.style.display = 'none';
 }
 
-export function showNotificationModal(modal: HTMLDivElement) {
-    modal.style.display = 'flex';
+export function showNotificationModal(back: HTMLDivElement) {
+    back.style.display = 'flex';
 }

@@ -18,8 +18,19 @@ body {
 }
 
 /*? Notification modal*/
-#notification-modal {
+#notification-modal-blur-background {
     display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    backdrop-filter: blur(8px);
+    z-index: 2;
+}
+
+#notification-modal {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;

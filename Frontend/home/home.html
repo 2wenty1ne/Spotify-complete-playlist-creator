@@ -23,13 +23,15 @@
     </header>
 
     <main>
-        <div id="notification-modal" class="test">
-            <div id="notification-modal-wrapper">
-                <img src="{{ url_for('static', filename='media/warning-32x32.png') }}" alt="placeholder for profil picture.">
-                <span id="notification-model-message">Internal Error</span>
-            </div>
-            <button id="close-modal-button" class="button">CLOSE</button>
+        <div id="notification-modal-blur-background">
+            <div id="notification-modal" class="test">
+                <div id="notification-modal-wrapper">
+                    <img src="{{ url_for('static', filename='media/warning-32x32.png') }}" alt="placeholder for profil picture.">
+                    <span id="notification-model-message">Internal Error</span>
+                </div>
+                <button id="close-modal-button" class="button">CLOSE</button>
 
+            </div>
         </div>
         <h2 class="playlist-creation-text">Input an artists ID to create a new playlist in your library containing every song they have in their discography.</h2>
         <div class="playlist-creation-container">
