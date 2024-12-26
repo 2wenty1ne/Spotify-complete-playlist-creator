@@ -1,5 +1,5 @@
-from dataClasses.Song import Song
-from utils.sendRequest import send_request, clear_whitespaces
+from DOMAIN.dataClasses.Song import Song
+from DOMAIN.utils.sendRequest import send_request, clear_whitespaces
 
 
 def retrieve_songs_from_artist_id(token, artist_id):

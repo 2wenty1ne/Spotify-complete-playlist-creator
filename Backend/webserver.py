@@ -7,7 +7,7 @@ import requests
 from urllib.parse import urlencode
 from flask import Flask, redirect, request, render_template, make_response, jsonify
 
-from secretAccess.userData import get_client_id, get_client_secret
+from DOMAIN.secretAccess.userData import get_client_id, get_client_secret
 
 
 CLIENT_ID = get_client_id()
@@ -22,6 +22,21 @@ app = Flask(__name__, template_folder=WEB_FOLDER_PATH, static_folder=WEB_FOLDER_
 
 def generate_random_string(length):
     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
+
+
+def validate_create_playlist_request(data):
+    required_keys = {
+        "playlistName": str,
+        "artistID": str,
+        "isPrivate": bool
+    }
+
+    for key, expected_type in required_keys.items():
+        if key not in data or not isinstance(data[key], expected_type):
+            return False
+
+    return True
+
 
 
 @app.route('/')
@@ -153,13 +168,21 @@ def error():
 def createPlaylist():
     data = request.get_json()
 
-    print(data)
+    if not validate_create_playlist_request(data):
+        return jsonify({"error": "Invalid request body"}), 400
 
-    return jsonify({"message":"worked"})
+    artistID = data["artistID"]
+
+    playlistName = data["playlistName"]
+    
+    isPrivate = data["isPrivate"]
+
+    print(data)
+    print(f"Is valid: {isValid}")
+
+    return jsonify({"message": "Request is valid!"}), 200
 
 
 #? START WEBSERVER
-def startWebserver():
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port="8888", debug=True)
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port="8888", debug=True)

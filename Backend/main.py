@@ -1,6 +1,6 @@
-from utils.getToken import get_token
-from spotify.createPlaylist import create_playlist
-from spotify.retrieveSongs import retrieve_songs_from_artist_id
+from DOMAIN.utils.getToken import get_token
+from DOMAIN.spotify.createPlaylist import create_playlist
+from DOMAIN.spotify.retrieveSongs import retrieve_songs_from_artist_id
 
 token = get_token()
 

@@ -1,7 +1,7 @@
 import base64
 
-from secretAccess.userData import get_client_id, get_client_secret
-from utils.sendRequest import send_request
+from DOMAIN.secretAccess.userData import get_client_id, get_client_secret
+from DOMAIN.utils.sendRequest import send_request
 
 
 client_id = get_client_id()
