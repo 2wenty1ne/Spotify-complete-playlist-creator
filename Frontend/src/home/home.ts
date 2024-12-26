@@ -84,12 +84,6 @@ export function handleHome() {
     errorButton.addEventListener('click', () => {
         swapNotificationModalVisability()
         console.log("error button clicked!");
-        // const currentHost = window.location.origin;
-        // const errorPath = '/err';
-        // const errorParams = new URLSearchParams({ error: 'amogus' }).toString();
-        // const errorUrl = `${currentHost}${errorPath}?${errorParams}`;
-
-        // window.location.href = errorUrl;
     })
     //! TEST
 }

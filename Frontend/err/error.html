@@ -8,12 +8,17 @@
     
     <link rel="stylesheet" href="{{ url_for('static', filename='err/error-styles.css') }}">
 </head>
+
 <body id="errorpage">
-    
+    {% include 'snippets/header.html' %}
     <main>
-        <h1>Error</h1>
-        <p>{{ error_message }}</p>
-        <button class="button return-home-button">Return to home</button>
+        {% include 'snippets/notificationModal.html' %} <!--? INCLUDE NOTIFICATION MODAL -->
+        <div id="error-message-wrapper">
+            <h1>Error</h1>
+            <p>{{ error_message }}</p>
+            <button class="button return-home-button">Return to home</button>
+            <button class="button error-button">Error</button> <!--! TEST -->
+        </div>
     </main>
     
     <script src="{{ url_for('static', filename='dist/app.js') }}"></script>

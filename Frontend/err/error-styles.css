@@ -1,14 +1,22 @@
-body, html {
-    height: 100%;
+:root {
+    /* Color pallete https://colorhunt.co/palette/211951836fff15f5baf0f3ff */
+    --main-bg-color: #211951;
+    --sec-bg-color: #836FFF;
+    --font-color: #F0F3FF;
+    --signal-color: #15F5BA;
+}
+
+#error-message-wrapper {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-main {
-    text-align: center;
-    padding: 20px;
-}
 
-.return-home-button {
+.return-home-button, .error-button{
     border: none;
 }

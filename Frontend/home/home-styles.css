@@ -6,55 +6,6 @@
     --signal-color: #15F5BA;
 }
 
-header {
-    background-color: var(--sec-bg-color);
-    padding: 1rem;
-    text-align: center;
-}
-.site-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
-.header-left {
-    /* flex: 0 0 auto; */
-}
-.site-title {
-    text-align: center;
-    margin: 0;
-    /* flex: 0 1 auto; */
-}
-.header-right { 
-    /* flex: 0 0 auto; */
-}
-.login-button {
-    border: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: var(--sec-bg-color);
-    color: var(--font-color);
-    cursor: pointer;
-    border-radius: 4px;
-    font-weight: bold;
-}
-.pb-circle {
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    margin: 0px 0px 0px 10px;
-}
-.pb-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-main {
-    padding: 1rem;
-    height: 100%;
-    position: relative;
-}
 
 .playlist-creation-text{
     text-align: center;

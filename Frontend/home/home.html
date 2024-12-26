@@ -9,30 +9,9 @@
 </head>
 
 <body id="homepage">
-    <header class="site-header">
-        <div class="header-left"></div>
-        <h1 class="site-title">Spotify Playlist Creation Tool</h1>
-        <div class="header-right">
-            <button class="login-button">
-                <div class="">Login</div>
-                <div class="pb-circle">
-                    <img src="{{ url_for('static', filename='media/profilPicute_placeholder-40x40.png') }}" alt="placeholder for profil picture.">
-                </div>
-            </button>
-        </div>
-    </header>
-
+    {% include 'snippets/header.html' %} <!--? INCLUDE HEADER -->
     <main>
-        <div id="notification-modal-blur-background">
-            <div id="notification-modal" class="test">
-                <div id="notification-modal-wrapper">
-                    <img src="{{ url_for('static', filename='media/warning-32x32.png') }}" alt="placeholder for profil picture.">
-                    <span id="notification-model-message">Internal Error</span>
-                </div>
-                <button id="close-modal-button" class="button">CLOSE</button>
-
-            </div>
-        </div>
+        {% include 'snippets/notificationModal.html' %} <!--? INCLUDE NOTIFICATION MODAL -->
         <h2 class="playlist-creation-text">Input an artists ID to create a new playlist in your library containing every song they have in their discography.</h2>
         <div class="playlist-creation-container">
 
