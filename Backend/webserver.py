@@ -8,6 +8,12 @@ from urllib.parse import urlencode
 from flask import Flask, redirect, request, render_template, make_response, jsonify
 
 from DOMAIN.secretAccess.userData import get_client_id, get_client_secret
+from DOMAIN.CreatePlaylistEndpoint.validateRequest import validate_create_playlist_request
+from DOMAIN.CreatePlaylistEndpoint.checkArtistID import checkArtistID
+from DOMAIN.utils.getUserID import getUserID
+from DOMAIN.spotify.createPlaylist import create_playlist
+from DOMAIN.spotify.retrieveSongs import retrieve_songs_from_artist_id
+from DOMAIN.spotify.addSongsToPlaylist import addSongsToPlaylist
 
 
 CLIENT_ID = get_client_id()
@@ -16,26 +22,12 @@ STATE_KEY_COOKIE = 'spotify_auth_state'
 ACCESS_TOKEN_COOKIE = "spotify_access_token"
 REFRESH_TOKEN_COOKIE = "spotify_refresh_token"
 
-WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Frontend'))
+WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Frontend'))
 
 app = Flask(__name__, template_folder=WEB_FOLDER_PATH, static_folder=WEB_FOLDER_PATH)
 
 def generate_random_string(length):
     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
-
-
-def validate_create_playlist_request(data):
-    required_keys = {
-        "playlistName": str,
-        "artistID": str,
-        "isPrivate": bool
-    }
-
-    for key, expected_type in required_keys.items():
-        if key not in data or not isinstance(data[key], expected_type):
-            return False
-
-    return True
 
 
 
@@ -48,7 +40,7 @@ def home():
 @app.route('/login')
 def login():
     state = generate_random_string(16) #? State generated
-    scope = 'user-read-private user-read-email'
+    scope = 'playlist-modify-public playlist-modify-private'
 
     host = request.host_url.rstrip('/')
 
@@ -138,6 +130,8 @@ def callback():
 
     access_token = tokens['access_token']
     refresh_token = tokens['refresh_token']
+    scope = tokens['scope']
+    print(f"Scope: {scope}")
 
     response.set_cookie(ACCESS_TOKEN_COOKIE, access_token)
     response.set_cookie(REFRESH_TOKEN_COOKIE, refresh_token)
@@ -167,18 +161,32 @@ def error():
 @app.route('/createPlaylist', methods=['POST'])
 def createPlaylist():
     data = request.get_json()
+    accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE) if request.cookies else None 
 
     if not validate_create_playlist_request(data):
         return jsonify({"error": "Invalid request body"}), 400
 
     artistID = data["artistID"]
-
     playlistName = data["playlistName"]
-    
     isPrivate = data["isPrivate"]
 
-    print(data)
-    print(f"Is valid: {isValid}")
+    if not checkArtistID(accessToken, artistID):
+        return jsonify({"error": "Invalid artist ID"}), 490
+
+    userID = getUserID(accessToken)["id"]
+
+    songInstancesToAdd = retrieve_songs_from_artist_id(accessToken, artistID)
+
+    songsToAdd = [song.song_uri for song in songInstancesToAdd]
+
+    playlist = create_playlist(accessToken, userID, playlistName, isPrivate)
+    playListID = playlist["id"]
+    playListURL = playlist["external_urls"]["spotify"]
+
+    print(playListID)
+    print(playListURL)
+
+    addSongsToPlaylist(accessToken, playListID, songsToAdd)
 
     return jsonify({"message": "Request is valid!"}), 200
 

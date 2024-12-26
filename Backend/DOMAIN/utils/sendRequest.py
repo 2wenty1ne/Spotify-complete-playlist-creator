@@ -6,23 +6,22 @@ from DOMAIN.dataClasses.CustomExceptions import RequestTypeNotFoundException
 def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
 
     if r_type == "post":
-        # print(f"Sending post request to {url}") #!TEST
         response = requests.post(url, headers=headers, data=data, json=json_data)
 
     elif r_type == "get":
-        # print(f"Sending get request to {url}") #!TEST
         response = requests.get(url, headers=headers, params=params)
 
     else:
         raise RequestTypeNotFoundException(r_type)
 
-
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print('Error:', response.status_code)
-        print(response.json())
-        return None
+    #TODO Check if token is expired - Code 401
+    return response
+    # if response.status_code == 200:
+    #     return response.json()
+    # else:
+    #     print('Error:', response.status_code)
+    #     print(response.json())
+    #     return None
 
 
 def clear_whitespaces(obj_to_clean):

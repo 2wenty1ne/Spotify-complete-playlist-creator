@@ -12,9 +12,8 @@ def retrieve_songs_from_artist_id(token, artist_id):
     artist_headers = authed_headers
     artist_params = {'market': 'DE'}
 
-    artist_response = send_request("get", artist_url, headers=artist_headers, params=artist_params)
+    artist_response = send_request("get", artist_url, headers=artist_headers, params=artist_params).json()
     artist_id = artist_response['id']
-    print(f"Loaded artist: {artist_response['name']} \nId: {artist_response['id']} \n")
 
 
     # ? Get all albums
@@ -24,7 +23,7 @@ def retrieve_songs_from_artist_id(token, artist_id):
     albums_params['include_groups'] = 'album, single'
     # albums_params['include_groups'] = 'album'
     albums_params = clear_whitespaces(albums_params)
-    albums_response = send_request("get", albums_url, headers=albums_headers, params=albums_params)
+    albums_response = send_request("get", albums_url, headers=albums_headers, params=albums_params).json()
 
 
     #? Get every album
@@ -39,7 +38,7 @@ def retrieve_songs_from_artist_id(token, artist_id):
         songs_headers = authed_headers
         songs_params = {'market': 'DE', 'offset': '0'}
 
-        songs_response = send_request("get", songs_url, headers=songs_headers, params=songs_params)
+        songs_response = send_request("get", songs_url, headers=songs_headers, params=songs_params).json()
 
         #? Get every song on an album
         for curr_song in songs_response['items']:
@@ -50,18 +49,13 @@ def retrieve_songs_from_artist_id(token, artist_id):
 
             add_songs_to_list(song_list, song)
 
-    print("\nAfter song addition")
-
-    print(f"\n{len(song_list)} Songs added \n")
+    print(f"\n{len(song_list)} Songs added \n") #! TEST
+    return song_list
 
 
 def add_songs_to_list(song_list, new_song):
-    # print(f"Checking: {new_song.name = }, number: {new_song.tracknumber} from {new_song.album_type} - {new_song.album}") # TEST
-    # print(new_song) # TEST
     if not song_list:
-        print("first")
         if is_main_artist_present(new_song):
-            print("first sec+")
             song_list.append(new_song)
         return
 
@@ -70,16 +64,12 @@ def add_songs_to_list(song_list, new_song):
         if compare_song.name == new_song.name:
             is_double = True
 
-    # print(f"{is_double = }\n") # TEST
-
     if not is_double:
-        print(new_song)
         if is_main_artist_present(new_song):
             song_list.append(new_song)
 
 
 def is_main_artist_present(song):
-    print(f"IDs: {song.artist_ids} - Main: {song.main_artist_id}")
     if song.main_artist_id in song.artist_ids:
         return True
     else:

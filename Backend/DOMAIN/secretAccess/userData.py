@@ -14,6 +14,3 @@ def get_client_id():
 def get_client_secret():
     return read_env("CLIENT_SECRET")
 
-
-def get_user_id():
-    return read_env("USER_ID")
