@@ -31,6 +31,29 @@ export function getPlaylistInputValues(): [string, string, boolean] {
 }
 
 
+export function showPlaylist(playlistLink) {
+    const wrapper: HTMLElement = document.querySelector('.playlist-iFrame-wrapper') as HTMLElement;
+
+    if (!wrapper) {
+        console.error("Playlist wrapper div not found");
+        return;
+    }
+
+    const placeholderDiv: HTMLElement = wrapper.querySelector('.playlist-placehorder') as HTMLElement;
+    const playlistiFrame: HTMLIFrameElement = wrapper.querySelector('.playlist-iFrame') as HTMLIFrameElement;
+
+    if (!placeholderDiv || !playlistiFrame) {
+        console.error("Either placeholder div or playlist iFrame not found");
+        return;
+    }
+
+    placeholderDiv.style.display = 'none'
+    playlistiFrame.style.display = 'block'
+    console.log("Playlist link:", playlistLink)
+    playlistiFrame.src = playlistLink
+}
+
+//! TEST
 export function playlistPlaceholderSwap() {
     const wrapper: HTMLElement = document.querySelector('.playlist-iFrame-wrapper') as HTMLElement;
 
@@ -57,3 +80,4 @@ export function playlistPlaceholderSwap() {
         playlistiFrame.src = "https://open.spotify.com/embed/album/30IYyCP3Ptfat4hO5alq7b?utm_source=generator" //! Test
     }
 }
+//! TEST

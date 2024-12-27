@@ -1,5 +1,5 @@
 import { swapNotificationModalVisability } from "../notificationModal";
-import { playlistPlaceholderSwap, getPlaylistInputValues, SubmitElementNotFound } from "./functions";
+import { playlistPlaceholderSwap, getPlaylistInputValues, SubmitElementNotFound, showPlaylist } from "./functions";
 
 export function handleHome() {
     const artistIDSubmitButton = document.getElementById('submitArtistID');
@@ -39,7 +39,8 @@ export function handleHome() {
         }
 
         const result = await response.json()
-        console.log("Success: ", result)
+        console.log("Success: " , result)
+        showPlaylist(result.playlistURL)
     })
 
     //? Login Button

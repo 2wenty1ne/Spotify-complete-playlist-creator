@@ -26,6 +26,9 @@ def send_request(r_type, url, headers=None, params=None, data=None, json_data=No
         raise RequestTypeNotFoundException(r_type)
 
     #TODO Check if token is expired - Code 401
+    if response.status_code == 401:
+        print("Token expired")
+    
     return response
     # if response.status_code == 200:
     #     return response.json()

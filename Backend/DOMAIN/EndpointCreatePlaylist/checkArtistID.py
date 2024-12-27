@@ -8,6 +8,8 @@ def checkArtistID(accessToken, artistID):
     artist_respone = send_request("get", artistURL, headers=authed_headers)
 
     if artist_respone.status_code == 404:
-        return False
+        return False, None
     
-    return True
+    artist_name = artist_respone.json()["name"]
+
+    return True, artist_name

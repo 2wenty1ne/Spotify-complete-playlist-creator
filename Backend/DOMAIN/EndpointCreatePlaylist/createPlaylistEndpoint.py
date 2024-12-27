@@ -1,6 +1,5 @@
 from flask import request, jsonify
 
-from DOMAIN.EndpointCreatePlaylist.validateRequest import validate_create_playlist_request
 from DOMAIN.EndpointCreatePlaylist.checkArtistID import checkArtistID
 from DOMAIN.EndpointCreatePlaylist.retrieveSongs import retrieve_songs_from_artist_id
 from DOMAIN.EndpointCreatePlaylist.createPlaylist import create_playlist
@@ -19,9 +18,12 @@ def createPlaylistRespone(ACCESS_TOKEN_COOKIE):
     playlistName = data["playlistName"]
     isPrivate = data["isPrivate"]
 
-    if not checkArtistID(accessToken, artistID):
+    isArtistIDValid, artistName = checkArtistID(accessToken, artistID)
+
+    if not isArtistIDValid:
         return jsonify({"error": "Invalid artist ID"}), 490
 
+    playlistName = check_playlist_name(playlistName, artistName)
     userID = getUserID(accessToken)["id"]
 
     songInstancesToAdd = retrieve_songs_from_artist_id(accessToken, artistID)
@@ -30,8 +32,29 @@ def createPlaylistRespone(ACCESS_TOKEN_COOKIE):
 
     playlist = create_playlist(accessToken, userID, playlistName, isPrivate)
     playListID = playlist["id"]
-    playListURL = playlist["external_urls"]["spotify"]
 
     addSongsToPlaylist(accessToken, playListID, songsToAdd)
 
-    return jsonify({"message": "Request is valid!"}), 200
+    playlistURL = f"https://open.spotify.com/embed/playlist/{playListID}?utm_source=generator"
+    return jsonify({"playlistURL": playlistURL}), 200
+
+
+def validate_create_playlist_request(data):
+    required_keys = {
+        "playlistName": str,
+        "artistID": str,
+        "isPrivate": bool
+    }
+
+    for key, expected_type in required_keys.items():
+        if key not in data or not isinstance(data[key], expected_type):
+            return False
+
+    return True
+
+
+def check_playlist_name(playlistName, artistName):
+    if not playlistName:
+        return f"All {artistName} Songs"
+    
+    return playlistName
