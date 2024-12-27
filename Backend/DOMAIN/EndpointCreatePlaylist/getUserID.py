@@ -1,4 +1,4 @@
-from DOMAIN.utils.sendRequest import send_request
+from DOMAIN.requestHandling.sendRequest import send_request
 
 def getUserID(token):
     userIDUrl = "https://api.spotify.com/v1/me"

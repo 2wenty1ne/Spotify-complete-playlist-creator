@@ -1,6 +1,6 @@
 import json
 
-from DOMAIN.utils.sendRequest import send_request
+from DOMAIN.requestHandling.sendRequest import send_request
 
 
 def addSongsToPlaylist(accessToken, playlistID, songsToAdd):

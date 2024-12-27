@@ -1,23 +1,15 @@
 import os
-import string
-import random
-import urllib
-import base64
-import requests
-from urllib.parse import urlencode
-from flask import Flask, redirect, request, render_template, make_response, jsonify
+from flask import Flask, request, render_template
 
 from DOMAIN.secretAccess.userData import get_client_id, get_client_secret
-from DOMAIN.CreatePlaylistEndpoint.validateRequest import validate_create_playlist_request
-from DOMAIN.CreatePlaylistEndpoint.checkArtistID import checkArtistID
-from DOMAIN.utils.getUserID import getUserID
-from DOMAIN.spotify.createPlaylist import create_playlist
-from DOMAIN.spotify.retrieveSongs import retrieve_songs_from_artist_id
-from DOMAIN.spotify.addSongsToPlaylist import addSongsToPlaylist
+from DOMAIN.EndpointLogin.login import loginResponse
+from DOMAIN.EndpointCallback.callback import callbackResponse
+from DOMAIN.EndpointCreatePlaylist.createPlaylistEndpoint import createPlaylistRespone
 
 
 CLIENT_ID = get_client_id()
 CLIENT_SECRET = get_client_secret()
+SCOPE = 'playlist-modify-public playlist-modify-private'
 STATE_KEY_COOKIE = 'spotify_auth_state'
 ACCESS_TOKEN_COOKIE = "spotify_access_token"
 REFRESH_TOKEN_COOKIE = "spotify_refresh_token"
@@ -25,10 +17,6 @@ REFRESH_TOKEN_COOKIE = "spotify_refresh_token"
 WEB_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Frontend'))
 
 app = Flask(__name__, template_folder=WEB_FOLDER_PATH, static_folder=WEB_FOLDER_PATH)
-
-def generate_random_string(length):
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
-
 
 
 @app.route('/')
@@ -39,117 +27,14 @@ def home():
 
 @app.route('/login')
 def login():
-    state = generate_random_string(16) #? State generated
-    scope = 'playlist-modify-public playlist-modify-private'
-
-    host = request.host_url.rstrip('/')
-
-    REDIRECT_URI = f"{host}/callback"
-
-    params = {
-        'response_type': 'code',
-        'client_id': CLIENT_ID,
-        'scope': scope,
-        'redirect_uri': REDIRECT_URI,
-        'state': state
-    }
-
-    url = 'https://accounts.spotify.com/authorize?' + urllib.parse.urlencode(params)
-
-    response = redirect(url)
-    response.set_cookie(STATE_KEY_COOKIE, state) #? Lasts as long as the browser session
-
-    return response
+    return loginResponse(CLIENT_ID, SCOPE, STATE_KEY_COOKIE)
 
 
 @app.route('/callback')
 def callback():
-    #TODO Dont always redirect to /err, return to home and show error message 
-    code = request.args.get('code', None) #? Code if auth successfull
-    auth_error = request.args.get('error', None)
-    login_gen_state = request.args.get('state', None)
-    cookie_state = request.cookies.get(STATE_KEY_COOKIE) if request.cookies else None 
+    return callbackResponse(STATE_KEY_COOKIE, CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE)
 
 
-    #? Error redirect if theres an error
-    if (auth_error is not None):
-        print(f"AuthError: {auth_error}")
-        query_error_params = urllib.parse.urlencode({'error': auth_error})
-        return redirect(f"/err?{query_error_params}")
-
-
-    #? Error redirect if state returned from spotify auth doesnt equal the state produced in login  
-    if (login_gen_state is None) or (login_gen_state != cookie_state):
-        query_state_mismatch_params = urllib.parse.urlencode({'error': 'state_mismatch'})
-        return redirect(f"/err?{query_state_mismatch_params}")
-
-
-    #? Error redirect if there is code and error is None - unknown
-    if (code is None):
-        query_unknown_error_params = urllib.parse.urlencode({'error': 'unknown_error'})
-        return redirect(f"/err?{query_unknown_error_params}")
-
-
-    response = make_response()
-    response.delete_cookie(STATE_KEY_COOKIE)
-
-    response.headers['Location'] = f"/"
-    response.status_code = 302
-    
-
-    initial_access_token_url = "https://accounts.spotify.com/api/token"
-    auth_header = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
-
-    #? Redirect URI only for validation (Needs to be in the list of accepted redirect URIs)
-    host = request.host_url.rstrip('/')
-    REDIRECT_URI = f"{host}/callback"
-
-    initial_access_token_payload = {
-        "code": code,
-        "redirect_uri": REDIRECT_URI,
-        "grant_type": "authorization_code"
-    }
-    initial_access_token_headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": f"Basic {auth_header}"
-    }
-
-    token_response = requests.post(
-        initial_access_token_url, 
-        data=initial_access_token_payload, 
-        headers=initial_access_token_headers)
-    
-    #? Redirect early to error page if an error accured getting access token
-    if token_response.status_code != 200:
-        access_token_err_params = urllib.parse.urlencode({'error': token_response.status_code})
-        response.headers['Location'] = f"/err?{access_token_err_params}"
-        return response
-
-
-    tokens = token_response.json()
-
-    access_token = tokens['access_token']
-    refresh_token = tokens['refresh_token']
-    scope = tokens['scope']
-    print(f"Scope: {scope}")
-
-    response.set_cookie(ACCESS_TOKEN_COOKIE, access_token)
-    response.set_cookie(REFRESH_TOKEN_COOKIE, refresh_token)
-
-    #! Test access token
-    # user_info_url = "https://api.spotify.com/v1/me"
-    # user_headers = {"Authorization": f"Bearer {access_token}"}
-    # user_response = requests.get(user_info_url, headers=user_headers)
-
-    # if user_response.status_code == 200:
-    #     print("User Info:", user_response.json())
-
-
-    #? Redirect back home after successfully getting access token
-    return response
-
-
-#? ERROR
 @app.route('/err')
 def error():
     error_message = request.args.get('error', 'Unknown error occurred')
@@ -157,38 +42,9 @@ def error():
     return render_template(errorTemplatePath, error_message=error_message)
 
 
-#? PLAYLIST CREATION
 @app.route('/createPlaylist', methods=['POST'])
 def createPlaylist():
-    data = request.get_json()
-    accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE) if request.cookies else None 
-
-    if not validate_create_playlist_request(data):
-        return jsonify({"error": "Invalid request body"}), 400
-
-    artistID = data["artistID"]
-    playlistName = data["playlistName"]
-    isPrivate = data["isPrivate"]
-
-    if not checkArtistID(accessToken, artistID):
-        return jsonify({"error": "Invalid artist ID"}), 490
-
-    userID = getUserID(accessToken)["id"]
-
-    songInstancesToAdd = retrieve_songs_from_artist_id(accessToken, artistID)
-
-    songsToAdd = [song.song_uri for song in songInstancesToAdd]
-
-    playlist = create_playlist(accessToken, userID, playlistName, isPrivate)
-    playListID = playlist["id"]
-    playListURL = playlist["external_urls"]["spotify"]
-
-    print(playListID)
-    print(playListURL)
-
-    addSongsToPlaylist(accessToken, playListID, songsToAdd)
-
-    return jsonify({"message": "Request is valid!"}), 200
+    return createPlaylistRespone(ACCESS_TOKEN_COOKIE)
 
 
 #? START WEBSERVER

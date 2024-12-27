@@ -2,9 +2,20 @@ import requests
 
 from DOMAIN.dataClasses.CustomExceptions import RequestTypeNotFoundException
 
-
 def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
+    """
+    Sends a request to provided URL and return the response.
+    Checks if status code is 401: Token expired, refreshes token if needed.
+    Retries with new token
 
+    :param r_type: Type of the request (post/get)
+    :param url: Url to which the request gets send
+    :param headers: (Optional) Request header
+    :param params: (Optional) Request parameter
+    :param data: (Optional) Request data
+    :param json_data: (Optional) Request json
+    """
+    
     if r_type == "post":
         response = requests.post(url, headers=headers, data=data, json=json_data)
 
