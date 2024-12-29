@@ -7,7 +7,10 @@ def checkArtistID(accessToken, artistID):
 
     artist_respone = send_request("get", artistURL, headers=authed_headers)
 
-    if artist_respone.status_code == 404:
+    print(f"ID check code: {artist_respone.status_code}")
+    print(f"Artist response: {artist_respone.json()}")
+
+    if artist_respone.status_code == 404 or artist_respone.status_code == 400:
         return False, None
     
     artist_name = artist_respone.json()["name"]

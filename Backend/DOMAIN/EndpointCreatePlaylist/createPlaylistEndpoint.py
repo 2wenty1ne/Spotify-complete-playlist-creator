@@ -23,6 +23,7 @@ def createPlaylistRespone(ACCESS_TOKEN_COOKIE):
     if not isArtistIDValid:
         return jsonify({"error": "Invalid artist ID"}), 490
 
+
     playlistName = check_playlist_name(playlistName, artistName)
     userID = getUserID(accessToken)["id"]
 

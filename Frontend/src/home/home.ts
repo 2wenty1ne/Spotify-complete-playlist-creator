@@ -1,5 +1,6 @@
 import { swapNotificationModalVisability } from "../notificationModal";
-import { playlistPlaceholderSwap, getPlaylistInputValues, SubmitElementNotFound, showPlaylist } from "./functions";
+import { playlistPlaceholderSwap } from "./functions";
+import { handleSubmitButton } from "./submitButton";
 
 export function handleHome() {
     const artistIDSubmitButton = document.getElementById('submitArtistID');
@@ -10,38 +11,9 @@ export function handleHome() {
 
     //? Submit button
     artistIDSubmitButton.addEventListener('click', async () => {
-        //TODO Check if logged in first
-        try {
-            var submitValues = getPlaylistInputValues()
-        } catch (SubmitElementNotFound) {
-            console.error(SubmitElementNotFound.msg + " not found")
-        }
-
-        var [playlistNameInputValue, artistIDInputValue, isPlaylistPrivate] = submitValues;
-
-        const requestBody = {
-            playlistName: playlistNameInputValue,
-            artistID: artistIDInputValue,
-            isPrivate: isPlaylistPrivate
-        }
-
-        console.log("submitting...")
-
-        const response = await fetch('/createPlaylist', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        })
-
-        if (!response.ok) {
-            console.log("Error creating playlist")
-            console.error(response.json)
-        }
-
-        const result = await response.json()
-        console.log("Success: " , result)
-        showPlaylist(result.playlistURL)
+        return await handleSubmitButton()
     })
+
 
     //? Login Button
     const logInButton: HTMLButtonElement = document.querySelector('.login-button') as HTMLButtonElement;

@@ -36,6 +36,13 @@ input[type=submit] {
     margin: 10px 0px 10px 0px;
     border: none;
 }
+#submit-error-message {
+    visibility: hidden;
+    color: red;
+}
+#submit-error-message-placeholder {
+    visibility: hidden;
+}
 .input-buttons-wrapper{
     display: flex;
     flex-direction: row;
@@ -44,7 +51,6 @@ input[type=submit] {
 }
 .privacy-toggle-switch-wrapper{
     margin: 8px;
-    /* background-color: red; */
 }
 .instructions-list {
     list-style-position: inside;
