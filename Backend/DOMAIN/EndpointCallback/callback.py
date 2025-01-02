@@ -1,3 +1,5 @@
+import time
+import json
 import urllib
 import base64
 from flask import request, make_response
@@ -15,7 +17,7 @@ def callbackResponse(STATE_KEY_COOKIE, CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_CO
 
     #? Error redirect if theres an error
     if (auth_error is not None):
-        print(f"AuthError: {auth_error}")
+        print(f"AuthError: {auth_error}") #! TEST
         query_error_params = urllib.parse.urlencode({'error': auth_error})
         return redirect(f"/err?{query_error_params}") #! Err redirect
 
@@ -40,7 +42,7 @@ def callbackResponse(STATE_KEY_COOKIE, CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_CO
     response.status_code = 302
 
     initial_access_token_url = "https://accounts.spotify.com/api/token"
-    auth_header = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
+    auth_payload = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
 
     #? Redirect URI only for validation (Needs to be in the list of accepted redirect URIs)
     host = request.host_url.rstrip('/')
@@ -51,19 +53,17 @@ def callbackResponse(STATE_KEY_COOKIE, CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_CO
         "redirect_uri": redirect_uri,
         "grant_type": "authorization_code"
     }
-    initial_access_token_headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": f"Basic {auth_header}"
-    }
 
 
     token_response = send_request(
-        "post", initial_access_token_url, 
+        "post", initial_access_token_url, auth_payload, 
+        headerType="tokenGen",
         data=initial_access_token_payload, 
-        headers=initial_access_token_headers)
+        )
     
     #? Redirect early to error page if an error accured getting access token
     if token_response.status_code != 200:
+        print(f"Error getting token {token_response.text}") #! TEST
         access_token_err_params = urllib.parse.urlencode({'error': token_response.status_code})
         response.headers['Location'] = f"/err?{access_token_err_params}" #! Err redirect
         return response
@@ -72,8 +72,15 @@ def callbackResponse(STATE_KEY_COOKIE, CLIENT_ID, CLIENT_SECRET, ACCESS_TOKEN_CO
     tokens = token_response.json()
 
     access_token = tokens['access_token']
+
+    one_hour_in_secs = 3600
+    expiration_time = time.time() + one_hour_in_secs
+
+    access_token = json.dumps({
+        'value': tokens['access_token'],
+        'expiration': expiration_time
+    })
     refresh_token = tokens['refresh_token']
-    scope = tokens['scope']
 
     response.set_cookie(ACCESS_TOKEN_COOKIE, access_token)
     response.set_cookie(REFRESH_TOKEN_COOKIE, refresh_token)

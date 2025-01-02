@@ -1,8 +1,9 @@
+import json
 import requests
 
 from DOMAIN.dataClasses.CustomExceptions import RequestTypeNotFoundException
 
-def send_request(r_type, url, headers=None, params=None, data=None, json_data=None):
+def send_request(r_type, url, token, headerType=None, params=None, data=None, json_data=None):
     """
     Sends a request to provided URL and return the response.
     Checks if status code is 401: Token expired, refreshes token if needed.
@@ -10,17 +11,22 @@ def send_request(r_type, url, headers=None, params=None, data=None, json_data=No
 
     :param r_type: Type of the request (post/get)
     :param url: Url to which the request gets send
-    :param headers: (Optional) Request header
+    :param token: Either access token or auth payload
+    :param headerType: (Optional) header type, default is for normal request, "tokenGen" for token gen header
     :param params: (Optional) Request parameter
     :param data: (Optional) Request data
     :param json_data: (Optional) Request json
     """
     
+    checkIfTokenIsValid()
+
+    header = createHeader(token, headerType)
+
     if r_type == "post":
-        response = requests.post(url, headers=headers, data=data, json=json_data)
+        response = requests.post(url, headers=header, data=data, json=json_data)
 
     elif r_type == "get":
-        response = requests.get(url, headers=headers, params=params)
+        response = requests.get(url, headers=header, params=params)
 
     else:
         raise RequestTypeNotFoundException(r_type)
@@ -36,6 +42,21 @@ def send_request(r_type, url, headers=None, params=None, data=None, json_data=No
     #     print('Error:', response.status_code)
     #     print(response.json())
     #     return None
+
+
+def createHeader(token, headerType):
+    tokenGenHeader = {"Authorization": f"Basic {token}", "Content-Type": "application/x-www-form-urlencoded"}
+
+    if headerType == "tokenGen":
+        return tokenGenHeader
+    
+    token = json.loads(token)
+    normalHeader = {"Authorization": f"Bearer {token['value']}", "Content-Type": "application/json"}
+    return normalHeader
+
+
+def checkIfTokenIsValid():
+    pass
 
 
 def clear_whitespaces(obj_to_clean):

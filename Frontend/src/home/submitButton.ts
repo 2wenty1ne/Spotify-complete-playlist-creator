@@ -38,6 +38,7 @@ export async function handleSubmitButton() {
     changeSubmitErrorMessageVis("hide")
     console.log("Success: " , result) //! TEST
     showPlaylist(result.playlistURL)
+    console.log(document.cookie)
 }
 
 

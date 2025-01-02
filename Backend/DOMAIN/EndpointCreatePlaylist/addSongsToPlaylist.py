@@ -12,11 +12,6 @@ def addSongsToPlaylist(accessToken, playlistID, songsToAdd):
 
 
 def addOneChunkToPlaylist(accessToken, playlistID, songChunk):
-    add_songs_headers = {
-        'Authorization': f'Bearer {accessToken}',
-        'Content-Type': 'application/json',
-    }
-    
     add_songs_data = {
         "uris": songChunk,
         "position": 0
@@ -24,6 +19,6 @@ def addOneChunkToPlaylist(accessToken, playlistID, songChunk):
 
     add_songs_url = f"https://api.spotify.com/v1/playlists/{playlistID}/tracks"
 
-    create_playlist_response = send_request("post", add_songs_url, headers=add_songs_headers, json_data=add_songs_data)
+    create_playlist_response = send_request("post", add_songs_url, accessToken, json_data=add_songs_data)
     
     return create_playlist_response
